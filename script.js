@@ -99,6 +99,4 @@ btnHold.addEventListener('click', function () {
 });
 
 // When "NEW GAME" button is clicked
-btnNew.addEventListener('click', function () {
-    startActions();
-});
+btnNew.addEventListener('click', startActions());
