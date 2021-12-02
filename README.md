@@ -1,10 +1,10 @@
 # The-Pig-Game
 
 This is an implementation of the __Pig game__, which is a simple dice game. In this game, players take turns to roll a single die as many times as they wish, adding all roll results to a running total, but losing their gained score for the turn if they roll a 1. Here, we have implemented the game such that the first player to score 100 or greater wins. 
-This project utilizes JavaScript, HTML and CSS, and was created as a part of this <a href="https://www.udemy.com/course/the-complete-javascript-course/">Udemy Javascript course</a>.
+This project utilizes JavaScript, HTML and CSS,.
 
 ## PICTURES FROM THE GAME
 
-![image](https://user-images.githubusercontent.com/48560818/132371142-7ec09e8b-0266-4f7e-aabc-c13510177221.png)
+![image](https://user-images.githubusercontent.com/48560818/144470003-0380bfff-0e82-468a-96c8-4f7ec48bcb19.png)
 
-![image](https://user-images.githubusercontent.com/48560818/132371388-14947355-69dd-42a0-8bba-954e48d3bb63.png)
+![image](https://user-images.githubusercontent.com/48560818/144470200-7dcec03f-38d4-43c9-9c64-596deabbd0b5.png)
