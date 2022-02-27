@@ -1,102 +1,130 @@
 'use strict';
 
-let dice; // Stores the dice numbers (between 1 and 6)
-let currentScore; // Keeps track of the current score for the current player
-let totalScore; // Keeps track of the total score for the current player
-let cpIndex; // Keeps track of the index of current player (0 or 1)
-let cpEl; // Keeps track of current player
-let cpCurrentScoreEl; // Keeps track of current score of the current player
-let cpTotalScoreEl; // Keeps track of total score of the current player
+let randomDice;
 
+// let p1CurrentScore = 0;
+// let p2CurrentScore = 0;
+let p1TotalScore = 0;
+let p2TotalScore = 0;
+let tempScore = 0;
 
-// Selecting elements
-// 1. Dice Element
-const diceEl = document.querySelector('.dice');
-// 2. Current Score Elements
-const current0El = document.getElementById('current--0');
-const current1El = document.getElementById('current--1');
-// 3. Total Score Elements
-const score0El = document.getElementById('score--0');
-const score1El = document.getElementById('score--1');
-// 4. Player Elements
-const player0El = document.querySelector('.player--0');
-const player1El = document.querySelector('.player--1');
-// 5. Button Elements
-const btnNew = document.querySelector('.btn--new');
-const btnRoll = document.querySelector('.btn--roll');
-const btnHold = document.querySelector('.btn--hold');
+//________________Dice Image______________
+const diceImageSelector = document.querySelector('.dice');
+diceImageSelector.classList.add('hidden');
 
+//________________Buttons_________________
+const newGameBtn = document.querySelector('.btn--new');
+const rollDiceBtn = document.querySelector('.btn--roll');
+const holdScoreBtn = document.querySelector('.btn--hold');
 
-// Actions to be performed at the start of game
-const startActions = function () {
-    // 1. Initialize the declared variables
-    dice = 0;
-    currentScore = 0;
-    totalScore = [0, 0];
-    cpIndex = 0;
-    // 2. Unhide the dice, which hidden by default at the start
-    diceEl.classList.remove('hidden');
-    // 3. Set both players' current scores to zero
-    current0El.textContent = 0;
-    current1El.textContent = 0;
-    // 4. Set both players' total scores to zero
-    score0El.textContent = 0;
-    score1El.textContent = 0;
-    // 5. Enable the "ROLL DICE" and "HOLD" buttons
-    btnRoll.disabled = false;
-    btnHold.disabled = false;
-    // 6. Whiten the background of Player 1, who will be playing first
-    player0El.classList.add('player--active');
-    player1El.classList.remove('player--active');
-    // 7. Remove the black background for the winner of the previous game
-    player0El.classList.remove('player--winner');
-    player1El.classList.remove('player--winner');
-}
+//________________Players_________________
+const p1 = document.querySelector('.player--0');
+const p2 = document.querySelector('.player--1');
 
-startActions();
+let currentPlayer = p1;
 
-// When "ROLL DICE" button is clicked
-btnRoll.addEventListener('click', function () {
-    dice = Math.ceil(Math.random() * 6);
-    console.log(dice);
-    diceEl.src = `dice-${dice}.png`;
-    
-    cpEl = (cpIndex === 0) ? current0El : current1El;
-    if (dice === 1) {
-        currentScore = 0;
-        cpEl.textContent = currentScore; 
-        player0El.classList.toggle('player--active');
-        player1El.classList.toggle('player--active');
-        cpIndex = 1 - cpIndex;
-    }
-    else {
-        currentScore += dice;
-        cpEl.textContent = currentScore;
-    }
+//________________Players' scores_________________
+const p1TotalScoreSelector = document.getElementById('score--0');
+const p2TotalScoreSelector = document.getElementById('score--1');
+p1TotalScoreSelector.textContent = 0;
+p2TotalScoreSelector.textContent = 0;
+
+const p1CurrentScoreSelector = document.getElementById('current--0');
+const p2CurrentScoreSelector = document.getElementById('current--1');
+p1CurrentScoreSelector.textContent = 0;
+p2CurrentScoreSelector.textContent = 0;
+
+//________________BUTTON HANDLERS______________
+//1. ---------------New Game Button--------------
+newGameBtn.addEventListener('click', () => {
+	// Reset Scores
+	tempScore = 0;
+	p1CurrentScoreSelector.textContent = 0;
+	p2CurrentScoreSelector.textContent = 0;
+	p1TotalScore = 0;
+	p2TotalScore = 0;
+	p1TotalScoreSelector.textContent = 0;
+	p2TotalScoreSelector.textContent = 0;
+
+	// Current Player
+	currentPlayer = p1;
+	p1.classList.add('player--active');
+	p2.classList.remove('player--active');
+
+	// Enable buttons
+	rollDiceBtn.disabled = false;
+	holdScoreBtn.disabled = false;
+
+	// Unhide the dice
+	diceImageSelector.classList.add('hidden');
+
+	// Unhide previous winner
+	p1.classList.remove('player--winner');
+	p2.classList.remove('player--winner');
 });
 
-// When "HOLD" button is clicked
-btnHold.addEventListener('click', function () {
-    cpEl = (cpIndex === 0) ? player0El : player1El;
-    cpCurrentScoreEl = (cpIndex === 0) ? current0El : current1El;
-    cpTotalScoreEl = (cpIndex === 0) ? score0El : score1El;
-    
-    totalScore[cpIndex] += currentScore;
-    cpTotalScoreEl.textContent = totalScore[cpIndex];
-    currentScore = 0;
-    cpCurrentScoreEl.textContent = currentScore;
+//2. --------------Roll Dice Button--------------
+rollDiceBtn.addEventListener('click', () => {
+	if (diceImageSelector.classList.contains('hidden')) {
+		diceImageSelector.classList.remove('hidden');
+	}
+	randomDice = Math.trunc(Math.random() * 6) + 1;
+	diceImageSelector.setAttribute('src', `dice-${randomDice}.png`);
 
-    if (totalScore[cpIndex] >= 100) {
-        cpEl.classList.add('player--winner');
-        btnRoll.disabled = true;
-        btnHold.disabled = true;
-    }
-    else {
-        player0El.classList.toggle('player--active');
-        player1El.classList.toggle('player--active');
-    }
-    cpIndex = 1 - cpIndex;
+	if (currentPlayer === p1) {
+		if (randomDice === 1) {
+			p1CurrentScoreSelector.textContent = 0;
+			p1.classList.remove('player--active');
+			p2.classList.add('player--active');
+			currentPlayer = p2;
+		} else {
+			tempScore += randomDice;
+			p1CurrentScoreSelector.textContent = tempScore;
+		}
+	} else if (currentPlayer === p2) {
+		if (randomDice === 1) {
+			p2CurrentScoreSelector.textContent = 0;
+			p2.classList.remove('player--active');
+			p1.classList.add('player--active');
+			currentPlayer = p1;
+		} else {
+			tempScore += randomDice;
+			p2CurrentScoreSelector.textContent = tempScore;
+		}
+	}
 });
 
-// When "NEW GAME" button is clicked
-btnNew.addEventListener('click', startActions());
+//3. --------------Hold Score Button-------------
+holdScoreBtn.addEventListener('click', () => {
+	if (currentPlayer === p1) {
+		p1TotalScore += tempScore;
+		p1TotalScoreSelector.textContent = p1TotalScore;
+		tempScore = 0;
+		p1CurrentScoreSelector.textContent = 0;
+
+		if (p1TotalScore >= 100) {
+			p1.classList.add('player--winner');
+			rollDiceBtn.disabled = true;
+			holdScoreBtn.disabled = true;
+		} else {
+			p1.classList.remove('player--active');
+			p2.classList.add('player--active');
+			currentPlayer = p2;
+		}
+	} else if (currentPlayer === p2) {
+		p2TotalScore += tempScore;
+		p2TotalScoreSelector.textContent = p2TotalScore;
+		tempScore = 0;
+		p2CurrentScoreSelector.textContent = 0;
+
+		if (p2TotalScore >= 100) {
+			p2.classList.add('player--winner');
+			rollDiceBtn.disabled = true;
+			holdScoreBtn.disabled = true;
+		} else {
+			p2.classList.remove('player--active');
+			p1.classList.add('player--active');
+			currentPlayer = p1;
+		}
+	}
+});
